@@ -1,10 +1,6 @@
 #include "philo.h"
 
-int error_msg()
-{
-	printf("Invalid argument\n");
-	return(1);
-}
+
 
 int main(int ac, char *av[])
 {

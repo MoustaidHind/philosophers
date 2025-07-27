@@ -31,12 +31,6 @@ int valide_args(char **av)
 	return(0);
 }
 
-int clean_data(t_data *data)
-{
-	free(data);
-	return(error_msg());
-}
-
 int args_to_nbrs(t_data *data, int ac, char **av)
 {
 	data->nbr_of_philo = ft_atoi(av[1]);
