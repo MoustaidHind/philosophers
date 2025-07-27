@@ -18,8 +18,8 @@ int main(int ac, char *av[])
 	data = malloc(sizeof(t_data));
 	if(!data)
 		return(1);
-	args_to_nbrs(data, ac, av); // fill the struct
-
+	if(args_to_nbrs(data, ac, av) == 1) // fill the struct
+		return(1);
 	
 
 	

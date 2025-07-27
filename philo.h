@@ -19,8 +19,8 @@ long	ft_atoi(const char *str);
 
 int is_number(char *str);
 int valide_args(char **av);
-void args_to_nbrs(t_data *data, int ac, char **av);
+int args_to_nbrs(t_data *data, int ac, char **av);
 int error_msg();
-
+int clean_data(t_data *data);
 
 #endif
