@@ -22,8 +22,8 @@ int main(int ac, char *av[])
 
 	
 
-
 	
+	free(data);
 	return(0);
 }
 

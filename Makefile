@@ -2,7 +2,7 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Werror -Wextra -Wall
+CFLAGS = -Werror -Wextra -Wall 
 
 SRC := $(wildcard *.c) # change it in other time
 

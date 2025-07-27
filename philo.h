@@ -15,12 +15,12 @@ typedef struct data
 } t_data;
 
 
-int	ft_atoi(const char *str);
+long	ft_atoi(const char *str);
 
 int is_number(char *str);
 int valide_args(char **av);
 void args_to_nbrs(t_data *data, int ac, char **av);
-
+int error_msg();
 
 
 #endif
