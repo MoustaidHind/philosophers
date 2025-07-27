@@ -1,0 +1,26 @@
+#ifndef PHILO_H
+#define PHILO_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct data
+{
+	int	nbr_of_philo;
+	int	time_to_die;
+	int time_to_eat;
+	int time_to_sleep;
+	int times_must_eat;
+} t_data;
+
+
+int	ft_atoi(const char *str);
+
+int is_number(char *str);
+int valide_args(char **av);
+void args_to_nbrs(t_data *data, int ac, char **av);
+
+
+
+#endif
