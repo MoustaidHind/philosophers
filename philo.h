@@ -4,14 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <pthread.h>
 
 typedef struct data
 {
-	int	nbr_of_philo;
-	int	time_to_die;
-	int time_to_eat;
-	int time_to_sleep;
-	int times_must_eat;
+	long	nbr_of_philo;
+	long	time_to_die;
+	long time_to_eat;
+	long time_to_sleep;
+	long times_must_eat;
 } t_data;
 
 
