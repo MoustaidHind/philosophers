@@ -43,15 +43,25 @@ void	ft_putstr_fd(char *s, int fd)
 void *simulation(void *ph)
 {
 	t_philo *philos;
-	// char *str;
+	int i = 0;
 
 	philos = (t_philo *)ph;
-
-
-	// ft_print(philos, "lunched");
-	eating(philos);
-	sleeping(philos);
-	thinking(philos);
+	if(philos->g_data->times_must_eat != 0)
+	{
+		while (i < philos->g_data->times_must_eat)
+		{
+			eating(philos);
+			sleeping(philos);
+			thinking(philos);
+			i++;
+		}
+	}
+	else
+	{
+		eating(philos);
+		sleeping(philos);
+		thinking(philos);
+	}
 
 	return(NULL);
 }

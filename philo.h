@@ -11,9 +11,9 @@ typedef struct data
 {
 	long	nbr_of_philo;
 	long	time_to_die;
-	long time_to_eat;
-	long time_to_sleep;
-	long times_must_eat;
+	long	time_to_eat;
+	long	time_to_sleep;
+	long	times_must_eat;
 } t_data;
 
 typedef struct philo
