@@ -28,7 +28,9 @@ typedef struct philo
 } t_philo;
 
 long	ft_atoi(const char *str);
-size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
+
+size_t	ft_strlen(const char *str);
 
 
 int is_number(char *str);
@@ -43,7 +45,7 @@ pthread_t		*create_philo(t_data *data, t_philo *philos);
 
 void *simulation(void *ph);
 
-void eat(t_philo *philo);
-void ft_sleep(t_philo *philo);
-void think(void);
+void eating(t_philo *philo);
+void sleeping(t_philo *philo);
+void thinking(t_philo *philo);
 #endif

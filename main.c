@@ -13,52 +13,61 @@ void ft_usleep(int timing_ms)
 	}
 }
 
-// void ft_print(t_philo *philo, char *str)
-// {
-// 	int i;
-// 	int len;
+void ft_print(t_philo *philo, char *str)
+{
+	int i;
 
-// 	i = 0;
-// 	len = ft_strlen(str);
+	i = 0;	
+	pthread_mutex_lock(&philo->write_mutex);
+
+	printf("philo -> %d  is  %s\n", philo->num_philo, str);
 	
-	
-// 	write(1, str, len);
-// }
+	pthread_mutex_unlock(&philo->write_mutex);
+}
+
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int		i;
+	(void)fd;
+
+	i = 0;
+	if (s)
+	while (s[i])
+	{
+		write(1, &s[i], 1);
+		i++;
+	}
+}
 
 void *simulation(void *ph)
 {
 	t_philo *philos;
+	// char *str;
 
 	philos = (t_philo *)ph;
-	
-	pthread_mutex_lock(&philos->write_mutex);
-	printf("im philo = %d, ", philos->num_philo);
-	printf("left_fork = %d, ", philos->left_fork);
-	printf("right_fork = %d,", philos->right_fork);
-	pthread_mutex_unlock(&philos->write_mutex);
 
-	eat(philos);
-	ft_sleep(philos);
-	think();
+
+	// ft_print(philos, "lunched");
+	eating(philos);
+	sleeping(philos);
+	thinking(philos);
 
 	return(NULL);
 }
 
-void think()
+void thinking(t_philo *philo)
 {
-	write(1, "is thinking\n", 12);
+	ft_print(philo, "thinking");
 }
 
-void ft_sleep(t_philo *philo)
+void sleeping(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->write_mutex);
-	write(1, "is sleeping\n", 12);
-	pthread_mutex_unlock(&philo->write_mutex);
-
+	ft_print(philo, "sleeping");
 	ft_usleep(philo->g_data->time_to_sleep);
 }
 
-void eat(t_philo *philo)
+void eating(t_philo *philo)
 {
 	int f1;
 	int f2;
@@ -69,19 +78,16 @@ void eat(t_philo *philo)
 	pthread_mutex_lock(&philo->forks[f1]);
 	pthread_mutex_lock(&philo->forks[f2]);
 
-	pthread_mutex_lock(&philo->write_mutex);
-
-	printf("i take 2 fork \n"); // use write instead
-	printf("im eating\n");
+	ft_print(philo, "take 2 fork");
+	ft_print(philo, "eating");
 
 	ft_usleep(philo->g_data->time_to_eat);
 
 	pthread_mutex_unlock(&philo->forks[f1]);
 	pthread_mutex_unlock(&philo->forks[f2]);
 
-	printf("i drop 2 forks\n");
+	ft_print(philo, "drop 2 forks");
 
-	pthread_mutex_unlock(&philo->write_mutex);
 }
 
 int main(int ac, char *av[])
@@ -122,12 +128,10 @@ int main(int ac, char *av[])
 //steps to do
 /*
 
-implement simple actions 
-eat ~~
-sleep
-think
+do in true loop, or nbr_must_eat
+is we should just lock mutex without other variabls 
 
-handling time
+handling time (time_to_die, ...)
 */
 
 
