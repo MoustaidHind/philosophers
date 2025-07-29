@@ -1,88 +1,88 @@
 #include "philo.h"
 
-typedef struct philo
-{
-	int num_philo;
-	int left_fork; // index in the mutex array
-	int right_fork;
-	t_data *g_data;
 
-} t_philo;
+void ft_usleep(int timing_ms)
+{
+	int i;
+
+	i = 0;
+	while (i < (timing_ms * 10))
+	{
+		usleep(100);
+		i++;
+	}
+}
+
+// void ft_print(t_philo *philo, char *str)
+// {
+// 	int i;
+// 	int len;
+
+// 	i = 0;
+// 	len = ft_strlen(str);
+	
+	
+// 	write(1, str, len);
+// }
 
 void *simulation(void *ph)
 {
 	t_philo *philos;
 
 	philos = (t_philo *)ph;
+	
+	pthread_mutex_lock(&philos->write_mutex);
+	printf("im philo = %d, ", philos->num_philo);
+	printf("left_fork = %d, ", philos->left_fork);
+	printf("right_fork = %d,", philos->right_fork);
+	pthread_mutex_unlock(&philos->write_mutex);
 
-	printf("im philo = %d  ", philos->num_philo);
-	printf("left = %d  ", philos->left_fork);
-	printf("right = %d  \n", philos->right_fork);
+	eat(philos);
+	ft_sleep(philos);
+	think();
 
 	return(NULL);
 }
 
-pthread_mutex_t *forks(t_data *data)
+void think()
 {
-	pthread_mutex_t	*forks;
-
-	// create array of mutexes
-	forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philo);
-	if(!forks)
-		return(NULL);
-	int j = 0;
-	while (j < data->nbr_of_philo)
-	{
-		pthread_mutex_init(&(forks[j]), NULL); // initialize all the the mutex to use it
-		j++;
-	}
-	
-	return(forks);
+	write(1, "is thinking\n", 12);
 }
 
-t_philo *philo_infos(t_data *data)
+void ft_sleep(t_philo *philo)
 {
-	t_philo			*philos;
-	int 			i;
+	pthread_mutex_lock(&philo->write_mutex);
+	write(1, "is sleeping\n", 12);
+	pthread_mutex_unlock(&philo->write_mutex);
 
-	i = 0;
-	// create array of structs t_philo to fill with infos
-	philos = malloc(sizeof(t_philo) * data->nbr_of_philo);
-	if(!philos)
-		return(NULL);
-
-	while (i < data->nbr_of_philo)
-	{
-		philos[i].num_philo = i;
-		philos[i].left_fork = i;
-		philos[i].right_fork = (i + 1) % data->nbr_of_philo; 
-		philos[i].g_data = data;
-		i++;
-	}
-
-	return (philos);
+	ft_usleep(philo->g_data->time_to_sleep);
 }
 
-pthread_t		*create_philo(t_data *data, t_philo *philos)
+void eat(t_philo *philo)
 {
-	pthread_t		*threads;
-	int				re;
-	int				i;
+	int f1;
+	int f2;
 
-	i = 0;
-	// creat array of ids_threads
-	threads = malloc(sizeof(pthread_t) * data->nbr_of_philo);  // check l fail
-	while (i < data->nbr_of_philo)
-	{
-		re = pthread_create(&threads[i], NULL, simulation, (void *)&(philos[i])); //pass address of element of the array
-		if(re != 0)
-			printf("pthread fail");
-		i++;
-	}
+	f1 = philo->left_fork;
+	f2 = philo->right_fork;
 
-	return(threads);
+	pthread_mutex_lock(&philo->forks[f1]);
+	pthread_mutex_lock(&philo->forks[f2]);
+
+	pthread_mutex_lock(&philo->write_mutex);
+
+	printf("i take 2 fork \n"); // use write instead
+	printf("im eating\n");
+
+	ft_usleep(philo->g_data->time_to_eat);
+
+	pthread_mutex_unlock(&philo->forks[f1]);
+	pthread_mutex_unlock(&philo->forks[f2]);
+
+	printf("i drop 2 forks\n");
+
+	pthread_mutex_unlock(&philo->write_mutex);
 }
-
 
 int main(int ac, char *av[])
 {
@@ -103,7 +103,7 @@ int main(int ac, char *av[])
 		return(1);
 	
 	arr_forks = forks(data); // check NULL
-	philos = philo_infos(data); // check NULL
+	philos = philo_infos(data, arr_forks); // check NULL
 	threads = create_philo(data, philos);  // check NULL
 
 	int i = 0;
@@ -121,15 +121,11 @@ int main(int ac, char *av[])
 
 //steps to do
 /*
-creat threads (philos) ~~~
-creat array of mutex (forks) (form 0 to nbr) (initialize mutex) ~~~
 
-Create philosophers and assign: ~~~
-    ID
-    Left and right fork index
-    Pointer to the shared data
-Print each philosopher’s ID and fork indexes
-
+implement simple actions 
+eat ~~
+sleep
+think
 
 handling time
 */
