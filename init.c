@@ -34,7 +34,7 @@ t_philo *philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 
 	while (i < data->nbr_of_philo)
 	{
-		philos[i].num_philo = i;
+		philos[i].num_philo = i + 1;
 		philos[i].left_fork = i;
 		philos[i].right_fork = (i + 1) % data->nbr_of_philo; 
 		philos[i].g_data = data;

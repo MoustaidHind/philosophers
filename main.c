@@ -1,6 +1,5 @@
 #include "philo.h"
 
-
 void ft_usleep(int timing_ms)
 {
 	int i;
@@ -15,29 +14,27 @@ void ft_usleep(int timing_ms)
 
 void ft_print(t_philo *philo, char *str)
 {
-	int i;
+	// pthread_mutex_lock(&philo->write_mutex);
 
-	i = 0;	
-	pthread_mutex_lock(&philo->write_mutex);
-
-	printf("philo -> %d  is  %s\n", philo->num_philo, str);
+		// timestamp_in_ms X has taken a fork
+	printf(" %d %s\n", philo->num_philo, str);
 	
-	pthread_mutex_unlock(&philo->write_mutex);
+	// pthread_mutex_unlock(&philo->write_mutex);
 }
 
-
-void	ft_putstr_fd(char *s, int fd)
+void get_time_ms() // get current time in ms instead of microsec
 {
-	int		i;
-	(void)fd;
+	struct timeval	tv;
+	int				millisec;
 
-	i = 0;
-	if (s)
-	while (s[i])
+	if(gettimeofday(&tv, NULL) == -1)
 	{
-		write(1, &s[i], 1);
-		i++;
+		printf("get time of day fail\n");
+		// return (-1);
 	}
+
+	millisec = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	printf("time in ms %d\n", millisec);
 }
 
 void *simulation(void *ph)
@@ -68,12 +65,12 @@ void *simulation(void *ph)
 
 void thinking(t_philo *philo)
 {
-	ft_print(philo, "thinking");
+	ft_print(philo, "is thinking");
 }
 
 void sleeping(t_philo *philo)
 {
-	ft_print(philo, "sleeping");
+	ft_print(philo, "is sleeping");
 	ft_usleep(philo->g_data->time_to_sleep);
 }
 
@@ -88,15 +85,13 @@ void eating(t_philo *philo)
 	pthread_mutex_lock(&philo->forks[f1]);
 	pthread_mutex_lock(&philo->forks[f2]);
 
-	ft_print(philo, "take 2 fork");
-	ft_print(philo, "eating");
+	ft_print(philo, "has taken a fork");
+	ft_print(philo, "is eating");
 
 	ft_usleep(philo->g_data->time_to_eat);
 
 	pthread_mutex_unlock(&philo->forks[f1]);
 	pthread_mutex_unlock(&philo->forks[f2]);
-
-	ft_print(philo, "drop 2 forks");
 
 }
 
@@ -122,6 +117,8 @@ int main(int ac, char *av[])
 	philos = philo_infos(data, arr_forks); // check NULL
 	threads = create_philo(data, philos);  // check NULL
 
+	get_time_ms(); // get current time in ms instead of microsec
+
 	int i = 0;
 	while (i < data->nbr_of_philo)
 	{
@@ -138,17 +135,16 @@ int main(int ac, char *av[])
 //steps to do
 /*
 
-do in true loop, or nbr_must_eat
+do in true loop, or nbr_must_eat ~~~
 is we should just lock mutex without other variabls 
 
+understand ~~~
+( 4 310 200 100 ) died 
+( 4 410 200 200 )  not died 
+
 handling time (time_to_die, ...)
+
+check if a phio die .
+
+what mean time from epoch 1970 ??? 
 */
-
-
-// forks just varibales used by threads  eat
-// other threads wait  think/sleep
-
-// eat -> use mutex
-// sleep -> use usleep
-// think -> unused mutex 
-
