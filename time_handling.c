@@ -2,28 +2,18 @@
 
 void ft_usleep(int timing_ms)
 {
-	int i;
 	long long start;
-	long long end;
 
-	printf("---->time i get %d\n", timing_ms);
 	start = get_time_ms(); 
-	// end = get_time_ms(); 
-	i = 0;
-	while (i < (timing_ms * 10))
+	while ((get_time_ms() - start) < timing_ms) // 0 < 200 * 10 = 2000 * 100 = 20 000 (microsec)
 	{
-		usleep(100);
-		i++;
+		usleep(100); //awake every 0.1ms to check the time (to dont oversleep)
 	}
-
-	end = get_time_ms();
-	printf("---------------------time spend in usleep %lld\n", end - start);
-
 }
 
 void ft_print(t_philo *philo, long long timestamp, char *str)
 {
-	pthread_mutex_lock(&philo->write_mutex);
+	// pthread_mutex_lock(&philo->write_mutex);
 
 		// timestamp_in_ms X has taken a fork
 	// long long curr_time;
@@ -31,7 +21,7 @@ void ft_print(t_philo *philo, long long timestamp, char *str)
 	// curr_time = get_time_ms() - timestamp;
 	printf("%lld %d %s\n", timestamp, philo->num_philo, str);
 	
-	pthread_mutex_unlock(&philo->write_mutex);
+	// pthread_mutex_unlock(&philo->write_mutex);
 }
 
 long long get_time_ms() // get current time in ms instead of microsec
