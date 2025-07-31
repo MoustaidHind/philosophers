@@ -45,6 +45,7 @@ int args_to_nbrs(t_data *data, int ac, char **av)
 	data->time_to_sleep = ft_atoi(av[4]);
 	if(data->time_to_sleep == -1)
 		return(clean_data(data));
+	// data->current_time = 
 	data->times_must_eat = 0;
 	if(ac == 6)
 	{

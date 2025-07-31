@@ -15,6 +15,7 @@ typedef struct data
 	long	time_to_eat;
 	long	time_to_sleep;
 	long	times_must_eat;
+	// long	current_time;
 } t_data;
 
 typedef struct philo
@@ -46,7 +47,13 @@ pthread_t		*create_philo(t_data *data, t_philo *philos);
 
 void *simulation(void *ph);
 
-void eating(t_philo *philo);
-void sleeping(t_philo *philo);
-void thinking(t_philo *philo);
+void eating(t_philo *philo, long long start_time);
+void sleeping(t_philo *philo, long long start_time);
+void thinking(t_philo *philo, long long start_time);
+
+void ft_usleep(int timing_ms);
+void ft_print(t_philo *philo, long long timestamp, char *str);
+long long get_time_ms();
+
+
 #endif
