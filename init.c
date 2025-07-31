@@ -37,6 +37,8 @@ t_philo *philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 		philos[i].num_philo = i + 1;
 		philos[i].left_fork = i;
 		philos[i].right_fork = (i + 1) % data->nbr_of_philo; 
+		philos[i].last_time_eat = 0;
+		philos[i].dead = 0;
 		philos[i].g_data = data;
 		philos[i].forks = arr_forks;
 		pthread_mutex_init(&(philos->write_mutex), NULL);

@@ -15,15 +15,19 @@ typedef struct data
 	long	time_to_eat;
 	long	time_to_sleep;
 	long	times_must_eat;
-	// long	current_time;
 } t_data;
 
 typedef struct philo
 {
-	int num_philo;
-	int left_fork; // index in the mutex array
-	int right_fork;
-	t_data	*g_data;
+	int 		num_philo;
+	int 		left_fork; // index in the mutex array
+	int 		right_fork;
+	
+	long long 	last_time_eat; // last time eat to check 
+	
+	int			dead;
+
+	t_data		*g_data;
 	pthread_mutex_t write_mutex;
 	pthread_mutex_t	*forks;
 
@@ -50,6 +54,7 @@ void *simulation(void *ph);
 void eating(t_philo *philo, long long start_time);
 void sleeping(t_philo *philo, long long start_time);
 void thinking(t_philo *philo, long long start_time);
+void is_dead(t_philo *philo, long long start_time);
 
 void ft_usleep(int timing_ms);
 void ft_print(t_philo *philo, long long timestamp, char *str);

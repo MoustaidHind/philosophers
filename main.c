@@ -49,15 +49,14 @@ understand ~~~
 ( 4 310 200 100 ) died 
 ( 4 410 200 200 )  not died 
 
-handling time (time_to_die, ...)
-
-do
+do ~~~~
 0ms
 200ms
 300ms ....
 
-check if a phio die .
+handling time (time_to_die, ...)
+
+check if a phio die . (try to catche die philo)
 
 
-what mean time from epoch 1970 ??? 
 */
