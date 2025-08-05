@@ -15,6 +15,8 @@ typedef struct data
 	long	time_to_eat;
 	long	time_to_sleep;
 	long	times_must_eat;
+	// long long	start_time; // time that simulation start.
+
 } t_data;
 
 typedef struct philo
@@ -24,8 +26,6 @@ typedef struct philo
 	int 		right_fork;
 	
 	long long 	last_time_eat; // last time eat to check 
-	
-	int			dead;
 
 	t_data		*g_data;
 	pthread_mutex_t write_mutex;
@@ -34,16 +34,12 @@ typedef struct philo
 } t_philo;
 
 long	ft_atoi(const char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
-
-size_t	ft_strlen(const char *str);
-
 
 int is_number(char *str);
 int valide_args(char **av);
 int args_to_nbrs(t_data *data, int ac, char **av);
-int error_msg();
-int clean_data(t_data *data);
+int error_msg(char *str);
+int clean_data(t_data *data, char *str);
 
 pthread_mutex_t	*forks(t_data *data);
 t_philo			*philo_infos(t_data *data, pthread_mutex_t *arr_forks);
@@ -54,7 +50,7 @@ void *simulation(void *ph);
 void eating(t_philo *philo, long long start_time);
 void sleeping(t_philo *philo, long long start_time);
 void thinking(t_philo *philo, long long start_time);
-void is_dead(t_philo *philo, long long start_time);
+char *is_dead(t_data *data, t_philo *philo, long long start_time);
 
 void ft_usleep(int timing_ms);
 void ft_print(t_philo *philo, long long timestamp, char *str);

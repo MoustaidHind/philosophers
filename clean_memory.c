@@ -1,16 +1,16 @@
 #include "philo.h"
 
 
-int error_msg()
+int error_msg(char *str)
 {
-	printf("Invalid argument\n");
+	printf("%s\n", str);
 	return(1);
 }
 
 
-int clean_data(t_data *data)
+int clean_data(t_data *data, char *str)
 {
 	free(data);
-	return(error_msg());
+	return(error_msg(str));
 }
 
