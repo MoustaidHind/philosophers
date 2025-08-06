@@ -58,6 +58,7 @@ int clean_data(t_data *data, char *str);
 pthread_mutex_t	*forks(t_data *data);
 t_philo			*philo_infos(t_data *data, pthread_mutex_t *arr_forks);
 pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_forks);
+int		create_odd_even_philos(t_data	*data, t_philo	*philos, pthread_t	*threads);
 
 void *simulation(void *ph);
 
@@ -69,6 +70,8 @@ char *is_dead(t_data *data, t_philo *philo, long long start_time);
 void ft_usleep(int timing_ms);
 void ft_print(t_philo *philo, long long timestamp, char *str);
 long long get_time_ms();
+
+void clean_up(t_philo *philos, pthread_mutex_t	*arr_forks, pthread_t	*threads);
 
 
 #endif

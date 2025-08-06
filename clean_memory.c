@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-
 int error_msg(char *str)
 {
 	printf("%s\n", str);

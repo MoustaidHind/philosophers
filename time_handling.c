@@ -24,10 +24,8 @@ void ft_usleep(int timing_ms)
 void ft_print(t_philo *philo, long long timestamp, char *str)
 {
 	pthread_mutex_lock(&(philo->g_data->dead_mutexx));
-
 	if(philo->g_data->dead != 1)
 		printf("%lld %d %s\n", timestamp, philo->num_philo, str);
-	
 	pthread_mutex_unlock(&(philo->g_data->dead_mutexx));
 }
 

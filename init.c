@@ -16,10 +16,10 @@
 pthread_mutex_t *forks(t_data *data)
 {
 	pthread_mutex_t	*forks;
-
-	int j = 0;
+	int j;
 
 	// create array of mutexes
+	j = 0;
 	forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philo);
 	if(!forks)
 		return(NULL);
@@ -28,7 +28,6 @@ pthread_mutex_t *forks(t_data *data)
 		pthread_mutex_init(&(forks[j]), NULL); // initialize all the the mutex to use it
 		j++;
 	}
-	
 	return(forks);
 }
 
@@ -42,7 +41,6 @@ t_philo *philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 	philos = malloc(sizeof(t_philo) * data->nbr_of_philo);
 	if(!philos)
 		return(NULL);
-
 	while (i < data->nbr_of_philo)
 	{
 		philos[i].num_philo = i + 1;
@@ -54,32 +52,20 @@ t_philo *philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 		pthread_mutex_init(&(philos->write_mutex), NULL);
 		i++;
 	}
-
 	return (philos);
 }
 
-pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_forks)
+int		create_odd_even_philos(t_data	*data, t_philo	*philos, pthread_t	*threads)
 {
-	pthread_t		*threads;
-	int				re;
-	int				i;
-	long long 	start_time;
+	int i;
+	int re;
 
 	i = 0;
-	// creat array of ids_threads
-	threads = malloc(sizeof(pthread_t) * data->nbr_of_philo);
-	if(!threads)
-		return(printf("Bad allocation\n"), NULL);
-
-	start_time = get_time_ms();
-	if(start_time == -1)
-		return(free(threads), NULL);
-
 	while (i < data->nbr_of_philo) // start the even threads, index(0, 2, 4, 6) -> thread(1, 3, 5, 7)
 	{
 		re = pthread_create(&threads[i], NULL, simulation, (void *)&(philos[i])); //pass address of element of the array
 		if(re != 0)
-			return(free(threads), printf("pthread fail\n"), NULL);
+			return(printf("pthread fail\n"), -1);
 		i += 2;
 	}
 	i = 1;  // start from 1
@@ -87,30 +73,54 @@ pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_for
 	{
 		re = pthread_create(&threads[i], NULL, simulation, (void *)&(philos[i])); //pass address of element of the array
 		if(re != 0)
-			return(free(threads), printf("pthread fail\n"), NULL);
+			return(printf("pthread fail\n"), -1);
 		i += 2;
 	}
+	return(0);
+}
 
-	if(!is_dead(data, philos, start_time))
+void clean_up(t_philo *philos, pthread_mutex_t	*arr_forks, pthread_t	*threads)
+{
+	int i;
+
+	i = 0;
+	while (i < philos->g_data->nbr_of_philo)
 	{
-		i = 0;
-		while (i < data->nbr_of_philo)
-		{
-			pthread_join(threads[i], NULL);
-			i++;
-		}
-
-		int j = 0;
-		while (j < data->nbr_of_philo)
-		{
-			pthread_mutex_destroy(&(arr_forks[j])); // destroy all the the mutex to use it
-			j++;
-		}
-	
-
-		free(threads);
-		return(NULL);
+		pthread_join(threads[i], NULL);
+		i++;
 	}
+	i = 0;
+	while (i < philos->g_data->nbr_of_philo)
+	{
+		pthread_mutex_destroy(&(arr_forks[i])); // destroy all the the mutex to use it
+		i++;
+	}
+	if(threads)
+		free(threads);
+	free(arr_forks);
+	free(philos->g_data);
+	free(philos);
+}
+
+
+pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_forks)
+{
+	pthread_t		*threads;
+	long long 	start_time;
+	
+	threads = malloc(sizeof(pthread_t) * data->nbr_of_philo);
+	if(!threads)
+	{
+		clean_up(philos, arr_forks, threads);
+		return(printf("Bad allocation\n"), NULL);
+	}
+	start_time = get_time_ms();
+	if(start_time == -1)
+		return(clean_up(philos, arr_forks, threads), NULL);
+	if(create_odd_even_philos(data, philos, threads) == -1)
+		return(clean_up(philos, arr_forks, threads), NULL);
+	if(!is_dead(data, philos, start_time))
+		return(clean_up(philos, arr_forks, threads), NULL);
 	return(threads);
 }
 
@@ -123,7 +133,6 @@ char *is_dead(t_data *data, t_philo *philo, long long start_time)
 	start_time = get_time_ms();
 	if(start_time == -1)
 		return(NULL);
-
 	i = 0;
 	while (data->dead != 1)
 	{
@@ -141,7 +150,6 @@ char *is_dead(t_data *data, t_philo *philo, long long start_time)
 			i = 0;
 		else
 			i++;
-		// ft_usleep(5);
 	}
 	return(NULL);
 }
