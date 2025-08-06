@@ -26,6 +26,13 @@ void *simulation(void *ph)
 	{
 		while (i < philos->g_data->times_must_eat)
 		{
+			pthread_mutex_lock(&(philos->g_data->dead_mutexx));
+			if(philos->g_data->dead == 1)
+			{
+				pthread_mutex_unlock(&(philos->g_data->dead_mutexx));
+				break;
+			}
+			pthread_mutex_unlock(&(philos->g_data->dead_mutexx)); // unlock it even condotion not true 
 			eating(philos, start_time);
 			sleeping(philos, start_time);
 			thinking(philos, start_time);
@@ -36,7 +43,13 @@ void *simulation(void *ph)
 	{ 
 		while (1)
 		{	
-
+			pthread_mutex_lock(&(philos->g_data->dead_mutexx));
+			if(philos->g_data->dead == 1)
+			{
+				pthread_mutex_unlock(&(philos->g_data->dead_mutexx));
+				break;
+			}
+			pthread_mutex_unlock(&(philos->g_data->dead_mutexx)); // unlock it even condotion not true 
 			eating(philos, start_time);
 			sleeping(philos, start_time);
 			thinking(philos, start_time);

@@ -27,6 +27,8 @@ typedef struct data
 	long	time_to_eat;
 	long	time_to_sleep;
 	long	times_must_eat;
+	int 	dead;
+	pthread_mutex_t dead_mutexx;
 	// long long	start_time; // time that simulation start.
 
 } t_data;
@@ -55,7 +57,7 @@ int clean_data(t_data *data, char *str);
 
 pthread_mutex_t	*forks(t_data *data);
 t_philo			*philo_infos(t_data *data, pthread_mutex_t *arr_forks);
-pthread_t		*create_philo(t_data *data, t_philo *philos);
+pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_forks);
 
 void *simulation(void *ph);
 

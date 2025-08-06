@@ -43,7 +43,7 @@ int main(int ac, char *av[])
 	if(!philos)
 		return(free(arr_forks), clean_data(data, "Bad allocation"));  // need to destroy mutexes 
 
-	threads = create_philo(data, philos);  // check NULL
+	threads = create_philo(data, philos, arr_forks);  // check NULL
 	if(threads == NULL)
 	{
 		free(philos);
@@ -53,6 +53,7 @@ int main(int ac, char *av[])
 		return(1);  // need to distroy mutexes
 	}
 
+	
 	i = 0;
 	while (i < data->nbr_of_philo)
 	{

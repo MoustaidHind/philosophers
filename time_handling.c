@@ -23,15 +23,12 @@ void ft_usleep(int timing_ms)
 
 void ft_print(t_philo *philo, long long timestamp, char *str)
 {
-	// pthread_mutex_lock(&philo->write_mutex);
+	pthread_mutex_lock(&(philo->g_data->dead_mutexx));
 
-		// timestamp_in_ms X has taken a fork
-	// long long curr_time;
-
-	// curr_time = get_time_ms() - timestamp;
-	printf("%lld %d %s\n", timestamp, philo->num_philo, str);
+	if(philo->g_data->dead != 1)
+		printf("%lld %d %s\n", timestamp, philo->num_philo, str);
 	
-	// pthread_mutex_unlock(&philo->write_mutex);
+	pthread_mutex_unlock(&(philo->g_data->dead_mutexx));
 }
 
 long long get_time_ms() // get current time in ms instead of microsec

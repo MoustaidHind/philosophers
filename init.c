@@ -58,7 +58,7 @@ t_philo *philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 	return (philos);
 }
 
-pthread_t		*create_philo(t_data *data, t_philo *philos)
+pthread_t		*create_philo(t_data *data, t_philo *philos, pthread_mutex_t	*arr_forks)
 {
 	pthread_t		*threads;
 	int				re;
@@ -92,7 +92,25 @@ pthread_t		*create_philo(t_data *data, t_philo *philos)
 	}
 
 	if(!is_dead(data, philos, start_time))
-		return(free(threads), NULL);
+	{
+		i = 0;
+		while (i < data->nbr_of_philo)
+		{
+			pthread_join(threads[i], NULL);
+			i++;
+		}
+
+		int j = 0;
+		while (j < data->nbr_of_philo)
+		{
+			pthread_mutex_destroy(&(arr_forks[j])); // destroy all the the mutex to use it
+			j++;
+		}
+	
+
+		free(threads);
+		return(NULL);
+	}
 	return(threads);
 }
 
@@ -101,27 +119,29 @@ char *is_dead(t_data *data, t_philo *philo, long long start_time)
 {
 	long long ti;
 	int i;
-	int dead = 0;
 	
 	start_time = get_time_ms();
 	if(start_time == -1)
 		return(NULL);
 
 	i = 0;
-	while (dead != 1)
+	while (data->dead != 1)
 	{
 		ti = get_time_ms() - start_time;
 		if((ti - philo[i].last_time_eat) >= data->time_to_die) 
 		{
-			dead = 1; // not valid
-			ft_print(&philo[i], ti, "dead");
+			pthread_mutex_lock(&(data->dead_mutexx));
+			data->dead = 1; // not valid
+			pthread_mutex_unlock(&(data->dead_mutexx));
+			printf("%lld %d %s\n", ti, philo[i].num_philo,  "dead");
+
 			return(NULL);
 		}
 		if(i + 1 == data->nbr_of_philo)
 			i = 0;
 		else
 			i++;
-		ft_usleep(5);
+		// ft_usleep(5);
 	}
 	return(NULL);
 }
