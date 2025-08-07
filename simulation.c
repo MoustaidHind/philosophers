@@ -23,6 +23,8 @@ int main_routine(t_philo	*philos, long long	start_time)
 	}
 	pthread_mutex_unlock(&(philos->g_data->dead_mutexx)); // unlock it even condotion not true 
 	eating(philos, start_time);
+	if(philos->g_data->nbr_of_philo == 1)
+		return(-1);
 	sleeping(philos, start_time);
 	thinking(philos, start_time);
 
@@ -81,10 +83,12 @@ void eating(t_philo *philo, long long start_time)
 
 	f1 = philo->left_fork;
 	f2 = philo->right_fork;	
-	pthread_mutex_lock(&philo->forks[f1]);
-	pthread_mutex_lock(&philo->forks[f2]);
 	ti = get_time_ms() - start_time;
+	pthread_mutex_lock(&philo->forks[f1]);
 	ft_print(philo, ti, "has taken a fork");
+	if(philo->g_data->nbr_of_philo == 1)
+		return;
+	pthread_mutex_lock(&philo->forks[f2]);
 	ft_print(philo, ti, "has taken a fork");
 	ft_print(philo, ti, "is eating");
 	philo->last_time_eat = get_time_ms() - start_time;

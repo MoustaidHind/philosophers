@@ -25,8 +25,6 @@ t_data	*parssing_part(int ac, char *av[])
 		return(NULL);
 	if(args_to_nbrs(data, ac, av) == 1) // fill the struct
 		return(NULL);
-	if(data->nbr_of_philo == 1)
-		return(clean_data(data, "Invalid number of forks"), NULL); 
 	return(data);
 }
 
@@ -41,7 +39,6 @@ int main(int ac, char *av[])
 	if(!data)
 		return(1);
 	arr_forks = forks(data);
-	
 	if(!arr_forks)
 		return(clean_data(data, "Bad allocation")); 
 	philos = philo_infos(data, arr_forks);
@@ -58,3 +55,4 @@ int main(int ac, char *av[])
 
 // why thread 3 come before thread 1 (somtihng about priority ~learn about it~)
 
+// distory mutex i use (dead, write ...)

@@ -95,6 +95,8 @@ void clean_up(t_philo *philos, pthread_mutex_t	*arr_forks, pthread_t	*threads)
 		pthread_mutex_destroy(&(arr_forks[i])); // destroy all the the mutex to use it
 		i++;
 	}
+	pthread_mutex_destroy(&(philos->g_data->dead_mutexx));
+	pthread_mutex_destroy(&(philos->write_mutex));
 	if(threads)
 		free(threads);
 	free(arr_forks);
