@@ -14,10 +14,10 @@
 
 long	ft_atoi(const char *str)
 {
-	int	i;
+	int		i;
 	long	result;
-	int	sign;
-	int	check;
+	int		sign;
+	int		check;
 
 	i = 0;
 	result = 0;
@@ -34,8 +34,8 @@ long	ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		result = result * 10 + (str[i++] - 48);
-		if(result > INT_MAX || result < INT_MIN)
-			return(-1);
+		if (result > INT_MAX || result < INT_MIN)
+			return (-1);
 		check++;
 	}
 	return (result * sign);
