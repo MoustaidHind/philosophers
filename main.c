@@ -60,20 +60,35 @@ char	*is_dead(t_data *data, t_philo *philo)
 		ti = get_time_ms() - philo->start_time;
 		if(data->times_must_eat != 0)
 		{
-			if ((ti - philo[i].last_time_eat) >= data->time_to_die)
+			pthread_mutex_lock(&(philo->g_data->g_mutex));
+			if ((ti - philo[i].last_time_eat) >= data->time_to_die)// need to protect with mutex
 			{
+				pthread_mutex_unlock(&(philo->g_data->g_mutex));
+				pthread_mutex_lock(&(philo->g_data->many_times_eat_mutexx));
 				if (data->many_times_eat == (data->nbr_of_philo * data->times_must_eat))
+				{
+					pthread_mutex_unlock(&(philo->g_data->many_times_eat_mutexx));
 					return ("done");
+				}
+				pthread_mutex_unlock(&(philo->g_data->many_times_eat_mutexx));
 				return(philo_dead(data, philo, ti, i));	
 			}
+			pthread_mutex_unlock(&(philo->g_data->g_mutex));
 		}
 		else
-			if ((ti - philo[i].last_time_eat) >= data->time_to_die)
+		{
+			pthread_mutex_lock(&(philo->g_data->g_mutex));
+			if ((ti - philo[i].last_time_eat) >= data->time_to_die) // need to protect with mutex
+			{
+				pthread_mutex_unlock(&(philo->g_data->g_mutex));
 				return(philo_dead(data, philo, ti, i));
-		if (i + 1 == data->nbr_of_philo)
-			i = 0;
-		else
-			i++;
+			}
+			pthread_mutex_unlock(&(philo->g_data->g_mutex));
+			if (i + 1 == data->nbr_of_philo)
+				i = 0;
+			else
+				i++;
+		}
 	}
 	return (NULL);
 }
@@ -103,4 +118,16 @@ int	main(int ac, char *av[])
 
 /*
 is a philo should die when find time_die == curr_time
+*/
+
+/*
+Protect shared variables
+
+Protect all reads/writes to:
+
+    philo->last_meal
+
+    philo->eat_count
+
+    philo->g_data->dead
 */

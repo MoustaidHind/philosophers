@@ -2,7 +2,7 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Werror -Wextra -Wall #-fsanitize=address -g
+CFLAGS = -Werror -Wextra -Wall -fsanitize=thread -g
 
 SRC := $(wildcard *.c) # change it in other time
 

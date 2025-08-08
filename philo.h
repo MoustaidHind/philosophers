@@ -29,6 +29,7 @@ typedef struct data
 	long			times_must_eat;
 	int				many_times_eat;
 	int				dead;
+	pthread_mutex_t	g_mutex;
 	pthread_mutex_t	many_times_eat_mutexx;
 	pthread_mutex_t	dead_mutexx;
 }	t_data;

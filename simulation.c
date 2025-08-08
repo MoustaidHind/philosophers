@@ -73,28 +73,35 @@ void	sleeping(t_philo *philo, long long start_time)
 
 void	eating(t_philo *philo, long long start_time)
 {
-	int			f1;
-	int			f2;
 	long long	ti;
 
-	f1 = philo->left_fork;
-	f2 = philo->right_fork;
-	pthread_mutex_lock(&philo->forks[f1]);
 	if (philo->g_data->nbr_of_philo == 1)
 	{
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
 		ft_print(philo, (get_time_ms() - start_time), "has taken a fork");
 		return ;
 	}
-	pthread_mutex_lock(&philo->forks[f2]);
+	if(philo->num_philo % 2 == 0)
+	{
+		pthread_mutex_lock(&philo->forks[philo->right_fork]);
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
+		pthread_mutex_lock(&philo->forks[philo->right_fork]);
+	}
 	ti = get_time_ms() - start_time;
 	ft_print(philo, ti, "has taken a fork");
 	ft_print(philo, ti, "has taken a fork");
 	ft_print(philo, ti, "is eating");
+	pthread_mutex_lock(&(philo->g_data->g_mutex));
 	philo->last_time_eat = get_time_ms() - start_time;
+	pthread_mutex_unlock(&(philo->g_data->g_mutex));
 	pthread_mutex_lock(&(philo->g_data->many_times_eat_mutexx));
 	philo->g_data->many_times_eat++;
 	pthread_mutex_unlock(&(philo->g_data->many_times_eat_mutexx));
 	ft_usleep(philo->g_data->time_to_eat);
-	pthread_mutex_unlock(&philo->forks[f1]);
-	pthread_mutex_unlock(&philo->forks[f2]);
+	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
+	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 }
