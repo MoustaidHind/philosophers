@@ -12,6 +12,17 @@
 
 #include "philo.h"
 
+int check_zero_nbr(t_data *data, int ac)
+{
+	if (ac == 6)
+		if (data->times_must_eat == 0)
+			return (clean_data(data, "Invalid argument"));
+	if (data->nbr_of_philo == 0 || data->time_to_die == 0 \
+		|| data->time_to_eat == 0 || data->time_to_sleep == 0)
+		return (clean_data(data, "Invalid argument"));
+	return (0);
+}
+
 t_data	*parssing_part(int ac, char *av[])
 {
 	t_data			*data;
@@ -24,6 +35,8 @@ t_data	*parssing_part(int ac, char *av[])
 	if (!data)
 		return (NULL);
 	if (args_to_nbrs(data, ac, av) == 1)
+		return (NULL);
+	if (check_zero_nbr(data, ac) == 1)
 		return (NULL);
 	return (data);
 }
@@ -88,23 +101,6 @@ int	main(int ac, char *av[])
 	return (0);
 }
 
-//tests not valiiiid 
-
 /*
-╰─$ ./philo 0 800 200 200
-[1]    128872 segmentation fault (core dumped)  ./philo 0 800 200 200
-*/
-
-/*
--------> is should return error msg?
-./philo 0 800 200 200      # Invalid number of philosophers
-./philo 5 0 200 200        # Invalid time_to_die
-./philo 5 800 0 200        # Invalid time_to_eat
-./philo 5 800 200 0        # Invalid time_to_sleep
-./philo 5 800 200 200 -1   # Invalid optional argument
-
-*/
-
-/*
-is should die when find time_die == curr_time
+is a philo should die when find time_die == curr_time
 */
