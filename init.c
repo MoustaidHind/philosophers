@@ -68,7 +68,7 @@ int	create_odd_even_philos(t_data *data, t_philo *philos, pthread_t *threads)
 			return (printf("pthread fail\n"), -1);
 		i += 2;
 	}
-	usleep(100);
+	usleep(200);
 	i = 1;
 	while (i < data->nbr_of_philo)
 	{
@@ -94,7 +94,6 @@ pthread_t	*create_philo(t_data *data, t_philo *philo, pthread_mutex_t *forks)
 	}
 	if (create_odd_even_philos(data, philo, threads) == -1)
 		return (clean_up(philo, forks, threads), NULL);
-	usleep(1000);
 	if (!is_dead(data, philo))
 		return (clean_up(philo, forks, threads), NULL);
 	return (threads);

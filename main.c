@@ -116,18 +116,32 @@ int	main(int ac, char *av[])
 	return (0);
 }
 
+
 /*
-is a philo should die when find time_die == curr_time
+199 180 60 60 should die a philo
 */
 
+/* some times die, other times no
+╰─$ ./philo 7 180 60 60
+1 1 has taken a fork
+1 1 has taken a fork
+1 1 is eating
+1 3 has taken a fork
+1 3 has taken a fork
+1 3 is eating
+2 5 has taken a fork
+2 5 has taken a fork
+2 5 is eating
+61 3 is sleeping
+61 1 is sleeping
+61 2 has taken a fork
+61 2 has taken a fork
+*/
+
+// ./philo 3 600 200 200 -> always die  
 /*
-Protect shared variables
+./philo 5 600 200 200 -> some times die , times no 
+./philo 7 180 60 60 -> same 
 
-Protect all reads/writes to:
-
-    philo->last_meal
-
-    philo->eat_count
-
-    philo->g_data->dead
+./philo 199 180 60 60 ->  this case should die but his not
 */
