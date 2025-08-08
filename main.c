@@ -61,7 +61,7 @@ char	*is_dead(t_data *data, t_philo *philo)
 		if(data->times_must_eat != 0)
 		{
 			pthread_mutex_lock(&(philo->g_data->g_mutex));
-			if ((ti - philo[i].last_time_eat) >= data->time_to_die)// need to protect with mutex
+			if ((ti - philo[i].last_time_eat) > data->time_to_die)// need to protect with mutex
 			{
 				pthread_mutex_unlock(&(philo->g_data->g_mutex));
 				pthread_mutex_lock(&(philo->g_data->many_times_eat_mutexx));
@@ -78,7 +78,7 @@ char	*is_dead(t_data *data, t_philo *philo)
 		else
 		{
 			pthread_mutex_lock(&(philo->g_data->g_mutex));
-			if ((ti - philo[i].last_time_eat) >= data->time_to_die) // need to protect with mutex
+			if ((ti - philo[i].last_time_eat) > data->time_to_die) // need to protect with mutex
 			{
 				pthread_mutex_unlock(&(philo->g_data->g_mutex));
 				return(philo_dead(data, philo, ti, i));
@@ -115,33 +115,3 @@ int	main(int ac, char *av[])
 	clean_up(philos, arr_forks, threads);
 	return (0);
 }
-
-
-/*
-199 180 60 60 should die a philo
-*/
-
-/* some times die, other times no
-╰─$ ./philo 7 180 60 60
-1 1 has taken a fork
-1 1 has taken a fork
-1 1 is eating
-1 3 has taken a fork
-1 3 has taken a fork
-1 3 is eating
-2 5 has taken a fork
-2 5 has taken a fork
-2 5 is eating
-61 3 is sleeping
-61 1 is sleeping
-61 2 has taken a fork
-61 2 has taken a fork
-*/
-
-// ./philo 3 600 200 200 -> always die  
-/*
-./philo 5 600 200 200 -> some times die , times no 
-./philo 7 180 60 60 -> same 
-
-./philo 199 180 60 60 ->  this case should die but his not
-*/
