@@ -28,26 +28,35 @@ t_data	*parssing_part(int ac, char *av[])
 	return (data);
 }
 
-char	*is_dead(t_data *data, t_philo *philo, long long start_time)
+char	*philo_dead(t_data *data, t_philo *philo, long long time, int i)
 {
-	long long	ti;
-	int			i;
+	pthread_mutex_lock(&(data->dead_mutexx));
+	data->dead = 1;
+	pthread_mutex_unlock(&(data->dead_mutexx));
+	printf("%lld %d %s\n", time, philo[i].num_philo, "dead");
+	return (NULL);
+}
 
-	start_time = get_time_ms();
-	if (start_time == -1)
-		return (NULL);
+char	*is_dead(t_data *data, t_philo *philo)
+{
+	long long (ti);
+	int (i);
 	i = 0;
 	while (data->dead != 1)
 	{
-		ti = get_time_ms() - start_time;
-		if ((ti - philo[i].last_time_eat) >= data->time_to_die)
+		ti = get_time_ms() - philo->start_time;
+		if(data->times_must_eat != 0)
 		{
-			pthread_mutex_lock(&(data->dead_mutexx));
-			data->dead = 1;
-			pthread_mutex_unlock(&(data->dead_mutexx));
-			printf("%lld %d %s\n", ti, philo[i].num_philo, "dead");
-			return (NULL);
+			if ((ti - philo[i].last_time_eat) >= data->time_to_die)
+			{
+				if (data->many_times_eat == (data->nbr_of_philo * data->times_must_eat))
+					return ("done");
+				return(philo_dead(data, philo, ti, i));	
+			}
 		}
+		else
+			if ((ti - philo[i].last_time_eat) >= data->time_to_die)
+				return(philo_dead(data, philo, ti, i));
 		if (i + 1 == data->nbr_of_philo)
 			i = 0;
 		else
@@ -78,3 +87,24 @@ int	main(int ac, char *av[])
 	clean_up(philos, arr_forks, threads);
 	return (0);
 }
+
+//tests not valiiiid 
+
+/*
+╰─$ ./philo 0 800 200 200
+[1]    128872 segmentation fault (core dumped)  ./philo 0 800 200 200
+*/
+
+/*
+-------> is should return error msg?
+./philo 0 800 200 200      # Invalid number of philosophers
+./philo 5 0 200 200        # Invalid time_to_die
+./philo 5 800 0 200        # Invalid time_to_eat
+./philo 5 800 200 0        # Invalid time_to_sleep
+./philo 5 800 200 200 -1   # Invalid optional argument
+
+*/
+
+/*
+is should die when find time_die == curr_time
+*/

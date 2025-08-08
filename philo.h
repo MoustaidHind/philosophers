@@ -27,7 +27,9 @@ typedef struct data
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			times_must_eat;
+	int				many_times_eat;
 	int				dead;
+	pthread_mutex_t	many_times_eat_mutexx;
 	pthread_mutex_t	dead_mutexx;
 }	t_data;
 
@@ -36,6 +38,7 @@ typedef struct philo
 	int				num_philo;
 	int				left_fork;
 	int				right_fork;
+	long long		start_time;
 	long long		last_time_eat;
 	t_data			*g_data;
 	pthread_mutex_t	write_mutex;
@@ -60,7 +63,8 @@ void			*simulation(void *ph);
 void			eating(t_philo *philo, long long start_time);
 void			sleeping(t_philo *philo, long long start_time);
 void			thinking(t_philo *philo, long long start_time);
-char			*is_dead(t_data *data, t_philo *philo, long long start_time);
+char			*is_dead(t_data *data, t_philo *philo);
+char			*philo_dead(t_data *data, t_philo *philo, long long time, int i);
 
 void			ft_usleep(int timing_ms);
 void			ft_print(t_philo *philo, long long timestamp, char *str);

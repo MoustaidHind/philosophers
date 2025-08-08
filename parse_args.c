@@ -57,8 +57,10 @@ int	args_to_nbrs(t_data *data, int ac, char **av)
 	if (data->time_to_sleep == -1)
 		return (clean_data(data, "atoi failed"));
 	data->times_must_eat = 0;
+	data->many_times_eat = 0;
 	data->dead = 0;
 	pthread_mutex_init(&(data->dead_mutexx), NULL);
+	pthread_mutex_init(&(data->many_times_eat_mutexx), NULL);
 	if (ac == 6)
 	{
 		data->times_must_eat = ft_atoi(av[5]);

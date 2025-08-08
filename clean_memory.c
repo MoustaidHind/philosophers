@@ -41,6 +41,7 @@ void	clean_up(t_philo *philo, pthread_mutex_t *arr_forks, pthread_t *thread)
 		i++;
 	}
 	pthread_mutex_destroy(&(philo->g_data->dead_mutexx));
+	pthread_mutex_destroy(&(philo->g_data->many_times_eat_mutexx));
 	pthread_mutex_destroy(&(philo->write_mutex));
 	if (thread)
 		free(thread);

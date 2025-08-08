@@ -44,6 +44,7 @@ t_philo	*philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 		philos[i].left_fork = i;
 		philos[i].right_fork = (i + 1) % data->nbr_of_philo;
 		philos[i].last_time_eat = 0;
+		philos[i].start_time = 0;
 		philos[i].g_data = data;
 		philos[i].forks = arr_forks;
 		pthread_mutex_init(&(philos->write_mutex), NULL);
@@ -54,21 +55,24 @@ t_philo	*philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 
 int	create_odd_even_philos(t_data *data, t_philo *philos, pthread_t *threads)
 {
-	int	i;
-	int	re;
-
+	long long	(initial_time);
+	int	(i), (re);
 	i = 0;
+	initial_time = get_time_ms();
 	while (i < data->nbr_of_philo)
 	{
+		philos[i].start_time = initial_time;
 		re = pthread_create(&threads[i], NULL, simulation, \
 			(void *)&(philos[i]));
 		if (re != 0)
 			return (printf("pthread fail\n"), -1);
 		i += 2;
 	}
+	ft_usleep(5);
 	i = 1;
 	while (i < data->nbr_of_philo)
 	{
+		philos[i].start_time = initial_time;
 		re = pthread_create(&threads[i], NULL, simulation, \
 			(void *)&(philos[i]));
 		if (re != 0)
@@ -81,7 +85,6 @@ int	create_odd_even_philos(t_data *data, t_philo *philos, pthread_t *threads)
 pthread_t	*create_philo(t_data *data, t_philo *philo, pthread_mutex_t *forks)
 {
 	pthread_t	*threads;
-	long long	start_time;
 
 	threads = malloc(sizeof(pthread_t) * data->nbr_of_philo);
 	if (!threads)
@@ -89,12 +92,9 @@ pthread_t	*create_philo(t_data *data, t_philo *philo, pthread_mutex_t *forks)
 		clean_up(philo, forks, threads);
 		return (printf("Bad allocation\n"), NULL);
 	}
-	start_time = get_time_ms();
-	if (start_time == -1)
-		return (clean_up(philo, forks, threads), NULL);
 	if (create_odd_even_philos(data, philo, threads) == -1)
 		return (clean_up(philo, forks, threads), NULL);
-	if (!is_dead(data, philo, start_time))
+	if (!is_dead(data, philo))
 		return (clean_up(philo, forks, threads), NULL);
 	return (threads);
 }
