@@ -26,7 +26,7 @@ int	main_routine(t_philo *philos, long long start_time)
 		return (-1);
 	sleeping(philos, start_time);
 	thinking(philos, start_time);
-	if(philos->g_data->nbr_of_philo % 2 != 0)
+	if (philos->g_data->nbr_of_philo % 2 != 0)
 		usleep(500);
 	return (0);
 }
@@ -84,16 +84,7 @@ void	eating(t_philo *philo, long long start_time)
 		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 		return ;
 	}
-	if(philo->num_philo % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->forks[philo->right_fork]);
-		pthread_mutex_lock(&philo->forks[philo->left_fork]);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->forks[philo->left_fork]);
-		pthread_mutex_lock(&philo->forks[philo->right_fork]);
-	}
+	lock_forks(philo);
 	ti = get_time_ms() - start_time;
 	ft_print(philo, ti, "has taken a fork");
 	ft_print(philo, ti, "has taken a fork");

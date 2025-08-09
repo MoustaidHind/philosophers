@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int check_zero_nbr(t_data *data, int ac)
+int	check_zero_nbr(t_data *data, int ac)
 {
 	if (ac == 6)
 		if (data->times_must_eat == 0)
@@ -39,58 +39,6 @@ t_data	*parssing_part(int ac, char *av[])
 	if (check_zero_nbr(data, ac) == 1)
 		return (NULL);
 	return (data);
-}
-
-char	*philo_dead(t_data *data, t_philo *philo, long long time, int i)
-{
-	pthread_mutex_lock(&(data->dead_mutexx));
-	data->dead = 1;
-	pthread_mutex_unlock(&(data->dead_mutexx));
-	printf("%lld %d %s\n", time, philo[i].num_philo, "dead");
-	return (NULL);
-}
-
-char	*is_dead(t_data *data, t_philo *philo)
-{
-	long long (ti);
-	int (i);
-	i = 0;
-	while (data->dead != 1)
-	{
-		ti = get_time_ms() - philo->start_time;
-		if(data->times_must_eat != 0)
-		{
-			pthread_mutex_lock(&(philo->g_data->g_mutex));
-			if ((ti - philo[i].last_time_eat) > data->time_to_die)// need to protect with mutex
-			{
-				pthread_mutex_unlock(&(philo->g_data->g_mutex));
-				pthread_mutex_lock(&(philo->g_data->many_times_eat_mutexx));
-				if (data->many_times_eat == (data->nbr_of_philo * data->times_must_eat))
-				{
-					pthread_mutex_unlock(&(philo->g_data->many_times_eat_mutexx));
-					return ("done");
-				}
-				pthread_mutex_unlock(&(philo->g_data->many_times_eat_mutexx));
-				return(philo_dead(data, philo, ti, i));	
-			}
-			pthread_mutex_unlock(&(philo->g_data->g_mutex));
-		}
-		else
-		{
-			pthread_mutex_lock(&(philo->g_data->g_mutex));
-			if ((ti - philo[i].last_time_eat) > data->time_to_die) // need to protect with mutex
-			{
-				pthread_mutex_unlock(&(philo->g_data->g_mutex));
-				return(philo_dead(data, philo, ti, i));
-			}
-			pthread_mutex_unlock(&(philo->g_data->g_mutex));
-			if (i + 1 == data->nbr_of_philo)
-				i = 0;
-			else
-				i++;
-		}
-	}
-	return (NULL);
 }
 
 int	main(int ac, char *av[])

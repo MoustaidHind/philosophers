@@ -55,8 +55,8 @@ t_philo	*philo_infos(t_data *data, pthread_mutex_t *arr_forks)
 
 int	create_odd_even_philos(t_data *data, t_philo *philos, pthread_t *threads)
 {
-	long long	(initial_time);
-	int	(i), (re);
+	long long (initial_time);
+	int (i), (re);
 	i = 0;
 	initial_time = get_time_ms();
 	while (i < data->nbr_of_philo)
@@ -97,4 +97,18 @@ pthread_t	*create_philo(t_data *data, t_philo *philo, pthread_mutex_t *forks)
 	if (!is_dead(data, philo))
 		return (clean_up(philo, forks, threads), NULL);
 	return (threads);
+}
+
+void	lock_forks(t_philo *philo)
+{
+	if (philo->num_philo % 2 == 0)
+	{
+		pthread_mutex_lock(&philo->forks[philo->right_fork]);
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
+		pthread_mutex_lock(&philo->forks[philo->right_fork]);
+	}
 }

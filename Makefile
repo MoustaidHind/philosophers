@@ -2,9 +2,9 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Werror -Wextra -Wall -fsanitize=thread -g
+CFLAGS = -Werror -Wextra -Wall
 
-SRC := $(wildcard *.c) # change it in other time
+SRC := clean_memory.c death_check.c ft_atoi.c init.c main.c parse_args.c simulation.c time_handling.c
 
 OBJ = $(SRC:.c=.o)
 

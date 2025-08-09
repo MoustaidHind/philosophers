@@ -60,12 +60,15 @@ pthread_t		*create_philo(t_data *dt, t_philo *ph, pthread_mutex_t *forks);
 int				create_odd_even_philos(t_data *dt, t_philo *ph, pthread_t *th);
 
 void			*simulation(void *ph);
-
+void			lock_forks(t_philo *philo);
 void			eating(t_philo *philo, long long start_time);
 void			sleeping(t_philo *philo, long long start_time);
 void			thinking(t_philo *philo, long long start_time);
+
 char			*is_dead(t_data *data, t_philo *philo);
-char			*philo_dead(t_data *data, t_philo *philo, long long time, int i);
+char			*philo_dead(t_data *dt, t_philo *ph, long long time, int i);
+int				check_meals_and_dead(t_data *d, t_philo *p, long long t, int i);
+int				check_dead(t_data *data, t_philo *philo, long long ti, int i);
 
 void			ft_usleep(int timing_ms);
 void			ft_print(t_philo *philo, long long timestamp, char *str);
